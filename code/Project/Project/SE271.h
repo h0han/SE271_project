@@ -1,5 +1,11 @@
 #pragma once
-# include <iostream>
+#include<iostream>
+#include<fstream>
+#include<istream>
+#include<string>
+
+#ifndef SE271_PROJECT
+#define SE271_PROJECT
 
 class Student {
 public:
@@ -10,5 +16,8 @@ public:
 	std::string mbti;
 	int* subject;
 	std::string self_introduction;
-
 };
+
+void open_csv(std::string filename);
+
+#endif
