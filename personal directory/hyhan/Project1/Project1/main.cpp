@@ -2,7 +2,6 @@
 
 #include <iostream>
 int main() {
-	open_csv("mbti.csv");
+	std::cout << match_mbti("enfj", "ENTJ") << '\n';
 	return 0;
-
 }
