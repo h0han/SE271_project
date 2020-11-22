@@ -2,6 +2,6 @@
 
 #include <iostream>
 
-int Student::match_mbti() {
+double Student::match_mbti() {
 	return 0;
 }

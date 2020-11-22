@@ -21,9 +21,8 @@ public:
 	int* subject;
 	std::string self_introduction;
 	int match();
-	int match_mbti(); // return resemblance of mbti
+	double match_mbti(std::string, std::string); // return resemblance of mbti
+	void csv_to_arr(std::string filename);
 };
-
-void open_csv(std::string filename);
 
 #endif
