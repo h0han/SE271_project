@@ -1,5 +1,10 @@
 #pragma once
-# include <iostream>
+#include <iostream>
+#include <fstream>
+#include <istream>
+#include <string>
+#include <cstring>
+#include <sstream>
 
 #ifndef	SE271_PROJECT
 #define SE271_PROJECT
@@ -18,5 +23,7 @@ public:
 	int match();
 	int match_mbti(); // return resemblance of mbti
 };
+
+void open_csv(std::string filename);
 
 #endif
