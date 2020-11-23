@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
 #ifndef SE271_PROJECT
 #define SE271_PROJECT
@@ -18,7 +19,10 @@ public:
 	std::string mail;
 	std::string mbti;
 	std::string self_introduction;
+	int score = 0;
 	int* subject = new int[100]{ 0 };
+
+	bool operator <(Student& student);
 };
 
 void open_csv_and_make_object(Student students[], std::string filename);

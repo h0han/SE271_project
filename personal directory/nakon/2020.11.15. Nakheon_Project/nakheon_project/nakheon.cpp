@@ -1,5 +1,9 @@
 #include "nakon_header.h"
 
+bool Student::operator <(Student& student) {
+	return this->score > student.score;
+}
+
 std::vector<std::string> split(std::string input, char delimiter) {
     std::vector<std::string> answer;
     std::stringstream ss(input);
@@ -83,6 +87,12 @@ void open_csv(std::string filename) {
 
 void Inputsubject(Student students[], int& num, std::string sub[]) {
 	int idx = 0;
+	int A_len = 16; // start at 0
+	int B_len = 19; // start at 16
+	int C_len = 12; // start at 35
+	int D_len = 17; // start at 47
+	int E_len = 18; // start at 64
+	int F_len = 18; // start at 82
 	for (int i = 0; i < 5; i++) {
 		idx = std::atoi(&sub[i][1]);
 		if (sub[i][0] == 'A') students[num].subject[idx - 1] = 1;
@@ -91,6 +101,14 @@ void Inputsubject(Student students[], int& num, std::string sub[]) {
 		if (sub[i][0] == 'D') students[num].subject[46 + idx] = 1;
 		if (sub[i][0] == 'E') students[num].subject[63 + idx] = 1;
 		if (sub[i][0] == 'F') students[num].subject[81 + idx] = 1;
+	}
+	for (int i = 5; i < 7; i++) {
+		if (sub[i] == "A") for (int j = 0; j < A_len; j++) students[num].subject[j] = -1;
+		if (sub[i] == "B") for (int j = 0; j < B_len; j++) students[num].subject[16 + j] = -1;
+		if (sub[i] == "C") for (int j = 0; j < C_len; j++) students[num].subject[35 + j] = -1;
+		if (sub[i] == "D") for (int j = 0; j < D_len; j++) students[num].subject[47 + j] = -1;
+		if (sub[i] == "E") for (int j = 0; j < E_len; j++) students[num].subject[64 + j] = -1;
+		if (sub[i] == "F") for (int j = 0; j < F_len; j++) students[num].subject[82 + j] = -1;
 	}
 }
 
@@ -138,8 +156,10 @@ void Signup(Student students[], int& num) {
 
 		open_csv("subject_code.csv");
 		std::cout << "좋아하는 과목 5개를 골라주세요. (ex. A1 B5 B7 C1 D2)" << std::endl;
-		std::string sub[5];
+		std::string sub[7];
 		std::cin >> sub[0] >> sub[1] >> sub[2] >> sub[3] >> sub[4];
+		std::cout << "싫어하는 분야 2개를 골라주세요. (ex. E F)" << std::endl;
+		std::cin >> sub[5] >> sub[6];
 		Inputsubject(students, num, sub);
 		for (int idx = 0; idx < 100; idx++) {
 			if (idx == 99) writeFile << students[num].subject[idx] << std::endl;
@@ -154,25 +174,42 @@ void Signup(Student students[], int& num) {
 	}
 }
 
-bool Login(Student students[], std::string id, std::string password, int& num) {
+int Login(Student students[], std::string id, std::string password, int& num) {
 	for (int i = 0; i < num; i++) {
-		//std::cout << students[i].id << std::endl;
 		if (students[i].id == id) {
 			if (students[i].password == password) {
-				//for (int j = 0; j < 99; j++)std::cout << students[i].subject[j] << ' ';
-				return true;
+				int now = i; //now는 현재 접속자의 index
+				return now;
 			}
-			else return false;
+			else return -1;
 		}
 	}
-	return false;
+	return -1;
+}
+
+void Match(Student students[], int& num, int now) {
+	for (int i = 0; i < 100; i++) {
+		if (students[now].subject[i] == 1) {
+			for (int no = 0; no < num; no++) {
+				if (no == now) students[no].score = 1000;
+				if (students[no].subject[i] == 1) students[no].score++;
+				else if (students[no].subject[i] == -1) students[no].score--;
+			}
+		}
+	}
+	std::cout << "======================================================" << std::endl;
+	std::cout << students[now].name << "님과 UGRP 매칭 점수가 높은 학생들부터 나열합니다." << std::endl;
+	std::cout << "======================================================" << std::endl;
+	std::sort(students, students + num);
+	for (int i = 1; i < num; i++) {
+		std::cout << students[i].name << ":" << students[i].score << std::endl;
+	}
 }
 
 void Menuselect(Student students[], int& num) {
 	int menuchoice = 0;
 	std::string id;
 	std::string password;
-	//while (menuchoice != 4) {
 		std::cout << "1.회원가입 2.로그인 3.종료" << std::endl;
 		std::cin >> menuchoice;
 		if (menuchoice != 1 && menuchoice != 2  && menuchoice != 3) {
@@ -188,15 +225,17 @@ void Menuselect(Student students[], int& num) {
 			std::cin >> id;
 			std::cout << "Password: ";
 			std::cin >> password;
-			if (Login(students, id, password, num)) {
+			int now = Login(students, id, password, num);
+			if (now != -1) {
 				std::cout << "로그인 성공" << std::endl;
+				Match(students, num, now);
 			}
-			else std::cout << "잘못된 비밀번호이거나 존재하지 않는 ID입니다." << std::endl;
-			Menuselect(students, num);
+			else {
+				std::cout << "잘못된 비밀번호이거나 존재하지 않는 ID입니다." << std::endl;
+				Menuselect(students, num);
+			}
 		}
-		
 		if (menuchoice == 3) {
-			//return;
+			std::cout << "프로그램을 종료합니다." << std::endl;
 		}
 	}
-//}
