@@ -4,15 +4,28 @@
 #include <iostream>
 #include "ootp.h"
 #include <sstream>
+#include <fstream>
+#include <istream>
 #include <vector>
 
-std::vector<Post> Board;
+int professroNo;
 
 int HashFunc(int n) {
 	int year, last3;
 	year = (n / 100000) % 100;
 	last3 = n % 1000;
 	return (year - 18) * 300 + last3;
+}
+std::vector<std::string> split(std::string input, char delimiter) {
+	std::vector<std::string> answer;
+	std::stringstream ss(input);
+	std::string temp;
+
+	while (getline(ss, temp, delimiter)) {
+		answer.push_back(temp);
+	}
+
+	return answer;
 }
 
 void open_csv(std::string filename) {
@@ -114,16 +127,41 @@ bool Login(Student students[], int id, std::string password, int& num) {
 	return false;
 }
 
+void open_csv_and_make_object(Professor professors[]) {
+	std::string filePath = "professor_database.csv";
+	std::ifstream openFile(filePath.data());
+	if (openFile.is_open()) {
+		professroNo = 0;
+		std::string line;
+		while (getline(openFile, line)) {
+			std::vector<std::string> row = split(line, ',');
+			professors[professroNo].name = row[0];
+			professors[professroNo].gender = row[1];
+			professors[professroNo].mail = row[2];
 
-
-void Makeboard(std::string title,std::string content) {
-	Post a;
-	a.title = title;
-	a.content = content;
-
+			for (int idx = 0; idx < 100; idx++) {
+				professors[professroNo].subject[idx] = std::atoi((row[3 + idx]).c_str());
+			}
+			professors[professroNo].officeloc = row[103];
+			professroNo++;
+		}
+		openFile.close();
+	}
 }
 
+void Showprofessor(Professor professors[],Student student ){
 
+	for (int i = 0; i < professroNo; i++) {
+		for (int j = 0; j < 100; j++) {
+			if (professors[i].subject[j] == 1 && student.subject[j] >= 1) {
+				std::cout << "매칭된 교수님!" << std::endl;
+				std::cout << "성함 : " << professors[i].name << std::endl;
+				std::cout << "이메일 : " << professors[i].mail << std::endl;
+				std::cout << "오피스 위치 : " << professors[i].officeloc << std::endl;
+			}
+		}
+	}
+}
 
 
 
@@ -132,7 +170,7 @@ void Menuselect(Student students[], int& num) {
 	int id;
 	std::string password;
 	while (menuchoice != 4) {
-		std::cout << "1.회원가입 2.로그인 3.사람 찾기 4.게시판 글쓰기 5.종료" << std::endl;
+		std::cout << "1.회원가입 2.로그인 3.사람 찾기 4.교수 찾기 5.종료" << std::endl;
 		std::cin >> menuchoice;
 		if (menuchoice != 1 && menuchoice != 2 && menuchoice != 3 && menuchoice != 4) {
 			std::cout << "다시 선택해주세요" << std::endl;
@@ -164,6 +202,7 @@ void Menuselect(Student students[], int& num) {
 int main(){
 	int num = 0;
 	Student students[200];
+	Professor professors[50];
 	//Getstudents(students);
 	Menuselect(students, num);
 
