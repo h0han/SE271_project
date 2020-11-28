@@ -1,9 +1,13 @@
 #include "nakon_header.h"
 
 int main() {
-	Student students[200];
+	
+	Student students[800];
+	Professor professors[120];
 	open_csv_and_make_object(students, "student_database.csv");
-    int num = get_number_of_students();
-	Menuselect(students, num);
+	open_csv_and_make_professor(professors);
+	Menuselect(students, professors);
+	
+	//std::cout<<toHash("")
 	return 0;
 }
