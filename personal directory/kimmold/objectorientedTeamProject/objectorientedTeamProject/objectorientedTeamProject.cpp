@@ -4,7 +4,16 @@
 #include <iostream>
 #include "ootp.h"
 #include <sstream>
+#include <vector>
 
+std::vector<Post> Board;
+
+int HashFunc(int n) {
+	int year, last3;
+	year = (n / 100000) % 100;
+	last3 = n % 1000;
+	return (year - 18) * 300 + last3;
+}
 
 void open_csv(std::string filename) {
 	std::string str_buf;
@@ -41,9 +50,21 @@ void Inputsubject(Student students[], int& num, std::string sub[]) {
 	}
 }
 
+void Inputsubject2(Student students[], int& num, char sub) {
+	for (int i = 0; i <= 4; i++) {
+		if (sub == 'A') for (int i = 0; i <= 15;i++) students[num].subject[i] = -1;
+		if (sub == 'B') for (int i = 16; i <= 34; i++) students[num].subject[i] = -1;
+		if (sub == 'C') for (int i = 35; i <= 46; i++) students[num].subject[i] = -1;
+		if (sub == 'D') for (int i = 47; i <= 63; i++) students[num].subject[i] = -1;
+		if (sub == 'E') for (int i = 64; i <= 81; i++) students[num].subject[i] = -1;
+		if (sub == 'F') for (int i = 82; i <= 99; i++) students[num].subject[i] = -1;
+	}
+}
+
 
 void Signup(Student students[], int& num) {
 	std::string sub[7];
+	char hate;
 	std::cout << "학번을 입력해주세요." << std::endl;
 	std::cin >> students[0].id;
 	if (std::cin.fail())
@@ -69,6 +90,11 @@ void Signup(Student students[], int& num) {
 	std::cout << "좋아하는 과목 5개를 골라주세요." << std::endl;
 	std::cin >> sub[0] >> sub[1] >> sub[2] >> sub[3] >> sub[4];
 	Inputsubject(students, num, sub);
+	
+	std::cout << "싫어하는 분야 1개를 골라주세요." << std::endl;
+	std::cin >> hate;
+	Inputsubject2(students, num, hate);
+
 	std::cout << "자기소개한말씀!" << std::endl;
 	std::cin >> students[num].self_introduction;
 	num++;
@@ -89,12 +115,24 @@ bool Login(Student students[], int id, std::string password, int& num) {
 }
 
 
+
+void Makeboard(std::string title,std::string content) {
+	Post a;
+	a.title = title;
+	a.content = content;
+
+}
+
+
+
+
+
 void Menuselect(Student students[], int& num) {
 	int menuchoice = 0;
 	int id;
 	std::string password;
 	while (menuchoice != 4) {
-		std::cout << "1.회원가입 2.로그인 3.사람 찾기 4.종료" << std::endl;
+		std::cout << "1.회원가입 2.로그인 3.사람 찾기 4.게시판 글쓰기 5.종료" << std::endl;
 		std::cin >> menuchoice;
 		if (menuchoice != 1 && menuchoice != 2 && menuchoice != 3 && menuchoice != 4) {
 			std::cout << "다시 선택해주세요" << std::endl;
@@ -123,12 +161,10 @@ void Menuselect(Student students[], int& num) {
 }
 
 
-int main()
-{
+int main(){
 	int num = 0;
 	Student students[200];
 	//Getstudents(students);
 	Menuselect(students, num);
 
 }
-
