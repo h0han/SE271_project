@@ -95,12 +95,12 @@ void Inputsubject(Student students[], int& num, std::string sub[]) {
 	int F_len = 18; // start at 82
 	for (int i = 0; i < 5; i++) {
 		idx = std::atoi(&sub[i][1]);
-		if (sub[i][0] == 'A') students[num].subject[idx - 1] = 1;
-		if (sub[i][0] == 'B') students[num].subject[15 + idx] = 1;
-		if (sub[i][0] == 'C') students[num].subject[34 + idx] = 1;
-		if (sub[i][0] == 'D') students[num].subject[46 + idx] = 1;
-		if (sub[i][0] == 'E') students[num].subject[63 + idx] = 1;
-		if (sub[i][0] == 'F') students[num].subject[81 + idx] = 1;
+		if (sub[i][0] == 'A') students[num].subject[idx - 1] = 5 - i;
+		if (sub[i][0] == 'B') students[num].subject[15 + idx] = 5 - i;
+		if (sub[i][0] == 'C') students[num].subject[34 + idx] = 5 - i;
+		if (sub[i][0] == 'D') students[num].subject[46 + idx] = 5 - i;
+		if (sub[i][0] == 'E') students[num].subject[63 + idx] = 5 - i;
+		if (sub[i][0] == 'F') students[num].subject[81 + idx] = 5 - i;
 	}
 	for (int i = 5; i < 7; i++) {
 		if (sub[i] == "A") for (int j = 0; j < A_len; j++) students[num].subject[j] = -1;
@@ -136,7 +136,7 @@ void Signup(Student students[], int& num) {
 		writeFile << students[num].name << ",";
 
 		while (students[num].gender != "1" && students[num].gender != "0") {
-			std::cout << "성별를 입력해주세요.(남자는 0, 여자는 1)" << std::endl;
+			std::cout << "성별을 입력해주세요.(남자는 0, 여자는 1)" << std::endl;
 			std::cin >> students[num].gender;
 			writeFile << students[num].gender << ",";
 		}
@@ -155,7 +155,7 @@ void Signup(Student students[], int& num) {
 		writeFile << students[num].self_introduction << ",";
 
 		open_csv("subject_code.csv");
-		std::cout << "좋아하는 과목 5개를 골라주세요. (ex. A1 B5 B7 C1 D2)" << std::endl;
+		std::cout << "좋아하는 과목 5개를 1지망부터 5지망까지 골라주세요. (ex. A1 B5 B7 C1 D2)" << std::endl;
 		std::string sub[7];
 		std::cin >> sub[0] >> sub[1] >> sub[2] >> sub[3] >> sub[4];
 		std::cout << "싫어하는 분야 2개를 골라주세요. (ex. E F)" << std::endl;
@@ -233,14 +233,16 @@ double match_mbti(std::string mbti1, std::string mbti2) {
 
 void Match(Student students[], int& num, int now) {
 	// Subject Matching
-	for (int i = 0; i < 100; i++) {
-		if (students[now].subject[i] == 1) {
-			for (int no = 0; no < num; no++) {
-				if (no == now) students[no].score = 1000;
-				if (students[no].subject[i] == 1) students[no].score = students[no].score + 3;
-				else if (students[no].subject[i] == -1) students[no].score = students[no].score - 5;
+	for (int no = 0; no < num; no++) {
+		for (int i = 0; i < 100; i++) {
+			for (int k = 5; k > 0; k--) {
+				if (students[now].subject[i] == k) {
+					if (no == now) students[no].score = 10000;
+					if (students[no].subject[i] > 0) students[no].score = students[no].score + (2.0 * k);
+					else if (students[no].subject[i] < 0) students[no].score = students[no].score - 5;
+				}
 			}
-		}	
+		}
 	}
 
 	// MBTI Matching
@@ -262,32 +264,36 @@ void Menuselect(Student students[], int& num) {
 	int menuchoice = 0;
 	std::string id;
 	std::string password;
-		std::cout << "1.회원가입 2.로그인 3.종료" << std::endl;
-		std::cin >> menuchoice;
-		if (menuchoice != 1 && menuchoice != 2  && menuchoice != 3) {
-			std::cout << "다시 선택해주세요" << std::endl;
+	std::cout << "환영합니다. 이 프로그램은 당신의 적절한 UGRP 팀원을 매칭해주는 프로그램입니다." << std::endl;
+	std::cout << "콘솔 창을 최대화한 후 사용해주세요." << std::endl;
+	std::cout << "======================================================" << std::endl;
+	std::cout << "1.회원가입 2.로그인 3.종료" << std::endl;
+	std::cout << "======================================================" << std::endl;
+	std::cin >> menuchoice;
+	if (menuchoice != 1 && menuchoice != 2  && menuchoice != 3) {
+		std::cout << "다시 선택해주세요" << std::endl;
+		Menuselect(students, num);
+	}
+	if (menuchoice == 1) {
+		Signup(students, num);
+		Menuselect(students, num);
+	}
+	if (menuchoice == 2) {
+		std::cout << "ID(학번): ";
+		std::cin >> id;
+		std::cout << "Password: ";
+		std::cin >> password;
+		int now = Login(students, id, password, num);
+		if (now != -1) {
+			std::cout << "로그인 성공" << std::endl;
+			Match(students, num, now);
+		}
+		else {
+			std::cout << "잘못된 비밀번호이거나 존재하지 않는 ID입니다." << std::endl;
 			Menuselect(students, num);
-		}
-		if (menuchoice == 1) {
-			Signup(students, num);
-			Menuselect(students, num);
-		}
-		if (menuchoice == 2) {
-			std::cout << "ID(학번): ";
-			std::cin >> id;
-			std::cout << "Password: ";
-			std::cin >> password;
-			int now = Login(students, id, password, num);
-			if (now != -1) {
-				std::cout << "로그인 성공" << std::endl;
-				Match(students, num, now);
-			}
-			else {
-				std::cout << "잘못된 비밀번호이거나 존재하지 않는 ID입니다." << std::endl;
-				Menuselect(students, num);
-			}
-		}
-		if (menuchoice == 3) {
-			std::cout << "프로그램을 종료합니다." << std::endl;
 		}
 	}
+	if (menuchoice == 3) {
+		std::cout << "프로그램을 종료합니다." << std::endl;
+	}
+}

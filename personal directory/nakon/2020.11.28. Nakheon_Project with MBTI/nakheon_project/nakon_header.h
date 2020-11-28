@@ -11,17 +11,21 @@
 #ifndef SE271_PROJECT
 #define SE271_PROJECT
 
-class Student {
+class Person {
 public:
-	std::string id; // student number
-	std::string password;
 	std::string name;
 	std::string gender; // represent 0(male), 1(female)
 	std::string mail;
 	std::string mbti;
+	int* subject = new int[100]{ 0 };
+};
+
+class Student : public Person {
+public:
+	std::string id; // student number
+	std::string password;
 	std::string self_introduction;
 	double score = 0;
-	int* subject = new int[100]{ 0 };
 
 	bool operator <(Student& student);
 };
