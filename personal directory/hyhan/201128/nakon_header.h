@@ -26,7 +26,7 @@ public:
 	bool operator <(Student& student);
 };
 
-void open_csv_and_make_object(Student students[], std::string filename);
+void MakeObject(Student students[], std::string filename);
 void Menuselect(Student students[], int& num);
 int get_number_of_students();
 #endif

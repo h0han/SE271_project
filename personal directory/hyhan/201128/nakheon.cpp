@@ -280,18 +280,7 @@ void Menuselect(Student students[], int& num) {
 			int now = Login(students, id, password, num);
 			if (now != -1) {
 				std::cout << "로그인 성공" << std::endl;
-				std::cout << "1. 자신과 맞는 UGRP 멤버 보기 2. 게시판" << std::endl;
-				std::cin >> menuchoice;
-				if (menuchoice != 1 && menuchoice != 2) {
-					std::cout << "다시 선택해주세요" << std::endl;
-					Menuselect(students, num);
-					if (menuchoice == 1) {
-						Match(students, num, now);
-					}
-					else if (menuchoice == 2) {
-						// 게시판 보여주는 함수
-					}
-				}
+				Match(students, num, now);
 			}
 			else {
 				std::cout << "잘못된 비밀번호이거나 존재하지 않는 ID입니다." << std::endl;
