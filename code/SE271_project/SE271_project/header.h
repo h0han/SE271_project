@@ -38,5 +38,4 @@ void MakeObject(Student students[], std::string filename);
 void MakeProfessor(Professor[]);
 void Menuselect(Student students[], Professor[]);
 int toHash(std::string);
-
 #endif

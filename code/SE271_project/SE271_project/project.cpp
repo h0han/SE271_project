@@ -35,7 +35,7 @@ void MakeObject(Student students[], std::string filename) {
 			students[studentNo].mail = row[4];
 			students[studentNo].mbti = row[5];
 			students[studentNo].self_introduction = row[6];
-			for (int idx = 0; idx < 100; idx++) {
+			for (long long idx = 0; idx < 100; idx++) {
 				students[studentNo].subject[idx] = std::atoi((row[7 + idx]).c_str());
 			}
 		}
@@ -214,6 +214,9 @@ void Match(Student students[], int now) {
 	// Subject Matching
 	students[now].score = -10000;
 	for (int no = 0; no < 500; no++) {
+		students[no].score = 0;
+	}
+	for (int no = 0; no < 500; no++) {
 		if (no == now || students[no].id == "0") continue;
 		for (int i = 0; i < 100; i++) {
 			students[no].score = students[no].score + pow(students[now].subject[i] - students[no].subject[i], 2);
@@ -232,7 +235,7 @@ void Match(Student students[], int now) {
 	std::cout << "점수가 낮을수록 나와 잘 맞는 학생입니다." << std::endl;
 	std::cout << "성별이 0이면 남자, 1이면 여자입니다." << std::endl;
 	std::cout << "============================================================================================================" << std::endl;
-	std::cout.width(7);
+	std::cout.width(10);
 	std::cout << std::left << "이름" << ": ";
 	std::cout.width(5);
 	std::cout << std::left << "점수" << ": ";
@@ -247,7 +250,7 @@ void Match(Student students[], int now) {
 	std::sort(students, students + 500);
 	for (int i = 1; i < 500; i++) {
 		if (students[i].id == "0") continue;
-		std::cout.width(7);
+		std::cout.width(10);
 		std::cout << std::left << students[i].name << ": ";
 		std::cout.width(5);
 		std::cout << std::left << students[i].score << ": ";
@@ -289,7 +292,7 @@ void MakeProfessor(Professor professors[]) {
 			professors[professorNo].gender = row[1];
 			professors[professorNo].mail = row[2];
 
-			for (int idx = 0; idx < 100; idx++) {
+			for (long long idx = 0; idx < 100; idx++) {
 				professors[professorNo].subject[idx] = std::atoi((row[3 + idx]).c_str());
 			}
 			professors[professorNo].officeloc = row[103];
@@ -327,6 +330,8 @@ void Menuselect(Student students[], Professor professors[]) {
 			std::cout << "로그인 성공" << std::endl;
 			Showprofessor(professors, students[toHash(id)]);
 			Match(students, now);
+			Student* students = new Student[500];
+			MakeObject(students, "student_database.csv"); // open csv and make objects(students)
 			Menuselect(students, professors);
 		}
 		else {
