@@ -2,6 +2,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,c++,visualstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,visualstudio
 
+code/SE271_project/SE271_project/student_database.csv
+
 ### C ###
 # Prerequisites
 *.d
