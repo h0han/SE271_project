@@ -11,6 +11,8 @@ This repository contains the project of SE271, the course of Object Oriented Pro
 
 The purpose of this project is that the weighting should be well set to rank students' data and quantity. We aim to help students form a well-matched team by considering not only the field of research or major, but also interpersonal factors.
 
+<img src="./fig/motiv.png" alt="motiv" style="zoom: 67%;" />
+
 [View Proposal](https://github.com/h0han/SE271_project/blob/master/proposal/proposal_201911101_201911031_201911131_201911189.pdf)
 
 
